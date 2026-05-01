@@ -139,8 +139,8 @@ export default function App() {
           </div>
 
           {/* Floating Accents */}
-          <div className="absolute right-[-10%] top-1/2 -translate-y-1/2 hidden lg:block opacity-10 pointer-events-none">
-            <Hammer size={500} strokeWidth={1} />
+          <div className="absolute right-[-50px] lg:right-10 top-1/2 -translate-y-1/2 hidden lg:block opacity-[0.15] pointer-events-none">
+            <Hammer size={500} strokeWidth={0.5} className="rotate-[5deg] text-slate-400" />
           </div>
         </section>
 
@@ -176,8 +176,8 @@ export default function App() {
 
         {/* Services Section */}
         <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
-          <div className="absolute right-0 bottom-0 opacity-10 translate-x-1/4 translate-y-1/4">
-             <Truck size={400} />
+          <div className="absolute right-0 bottom-0 opacity-[0.06] pointer-events-none hidden lg:block">
+             <Truck size={400} strokeWidth={0.5} className="text-white" />
           </div>
           
           <div className="max-w-7xl mx-auto px-4 relative z-10">
