@@ -7,7 +7,8 @@ import {
   Hammer, 
   CheckCircle2,
   ChevronRight,
-  Star
+  Star,
+  ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
@@ -519,19 +520,36 @@ export default function App() {
                 </div>
               </div>
               
-              <a 
-                href="https://yandex.ru/maps/?text=Магнитогорск+Зеленый+Лог+26"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full lg:w-[450px] aspect-square bg-slate-200 rounded-3xl overflow-hidden relative border-4 border-white shadow-2xl hover:border-brand-red transition-all group"
-              >
-                 {/* Map Placeholder */}
-                 <div className="absolute inset-0 flex items-center justify-center bg-slate-100 flex-col px-12 text-center group-hover:bg-slate-50 transition-colors">
-                    <MapPin size={48} className="text-brand-red mb-4 animate-bounce" />
-                    <p className="font-bold text-slate-900 mb-2 underline decoration-brand-red font-mono">ОТКРЫТЬ В КАРТАХ</p>
-                    <p className="text-sm text-slate-500 italic">Магнитогорск, Зеленый Лог 26 (Напротив ЖК "Солнечный")</p>
-                 </div>
-              </a>
+              <div className="w-full lg:w-[500px] aspect-square rounded-[2.5rem] overflow-hidden relative border-8 border-white shadow-2xl transition-all">
+                <iframe 
+                  src="https://yandex.ru/map-widget/v1/?panorama%5Bpoint%5D=58.980651%2C53.353101&panorama%5Bdirection%5D=0.000000%2C10.000000&panorama%5Bspan%5D=100.000000%2C50.000000&z=17" 
+                  width="100%" 
+                  height="100%" 
+                  frameBorder="0" 
+                  allowFullScreen={true}
+                  className="w-full h-full"
+                ></iframe>
+                {/* Overlay link to open in full maps */}
+                <a 
+                  href="https://yandex.ru/maps/org/stroy_dvor/173516593414/" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-[2rem] shadow-xl flex items-center justify-between group hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-red/10 flex items-center justify-center text-brand-red group-hover:bg-white transition-colors">
+                      <MapPin size={24} />
+                    </div>
+                    <div>
+                      <p className="text-[9px] technical-label opacity-40 uppercase tracking-widest">Зелёный Лог 26 (Магнитогорск)</p>
+                      <p className="font-bold text-sm">Проложить маршрут</p>
+                    </div>
+                  </div>
+                  <div className="text-brand-red group-hover:text-white transition-colors">
+                    <ExternalLink size={20} />
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </section>
