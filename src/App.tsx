@@ -58,20 +58,8 @@ export default function App() {
             <div className="hidden md:flex items-center gap-8">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <Clock size={16} className="text-brand-red" />
-              <span>Ежедневно: 10:00 — 19:00</span>
+              <span>Пн—Сб: 10:00 — 19:00 • Вс: 10:00 — 18:00</span>
             </div>
-            <a 
-              href="https://vk.com/stroy_dom_mgn" 
-              target="_blank" 
-              rel="noreferrer"
-              className="flex items-center justify-center hover:translate-y-[-1px] transition-all"
-              title="Мы ВКонтакте"
-            >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 4.8C0 2.14903 2.14903 0 4.8 0H19.2C21.851 0 24 2.14903 24 4.8V19.2C24 21.851 21.851 24 19.2 24H4.8C2.14903 24 0 21.851 0 19.2V4.8Z" fill="#0077FF"/>
-                <path d="M12.639 17.514C7.886 17.514 5.176 14.258 5.062 8.847H7.452C7.531 12.81 9.278 14.488 10.662 14.832V8.847H12.925V12.261C14.31 12.112 15.772 10.575 16.264 8.847H18.528C18.154 11.005 16.558 12.542 15.415 13.202C16.558 13.734 18.39 15.054 19.168 17.514H16.666C16.065 15.642 14.577 14.2 12.925 14.032V17.514H12.639Z" fill="white"/>
-              </svg>
-            </a>
             <a 
               href="https://yandex.ru/maps/?text=Магнитогорск+Зеленый+Лог+26" 
               target="_blank" 
@@ -219,14 +207,14 @@ export default function App() {
                 </div>
               </div>
               
-              <div className="bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-sm self-start">
-                <h3 className="text-2xl font-bold mb-6">Нужна помощь мастера?</h3>
-                <p className="text-slate-400 mb-8">Оставьте заявку по телефону, и мы пришлем специалиста для мелкосрочного ремонта или монтажа в удобное время.</p>
+              <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm self-start">
+                <h3 className="text-xl font-bold mb-4">Нужна помощь мастера?</h3>
+                <p className="text-slate-400 mb-6 text-sm">Оставьте заявку по телефону, и мы пришлем специалиста для мелкосрочного ремонта или монтажа в удобное время.</p>
                 <a 
                   href="tel:89000987933"
-                  className="w-full bg-white text-slate-950 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors"
+                  className="w-full bg-white text-slate-950 py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-brand-red hover:text-white transition-all shadow-lg"
                 >
-                  <Phone size={18} />
+                  <Phone size={16} />
                   <span>8 900 098 79 33</span>
                 </a>
               </div>
@@ -259,17 +247,17 @@ export default function App() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
                         onClick={() => setSelectedCategoryId(cat.id)}
-                        className="group relative bg-white p-8 rounded-[2rem] border border-slate-100 hover:border-brand-red transition-all text-left shadow-sm hover:shadow-xl hover:shadow-red-50 flex flex-col gap-6"
+                        className="group relative bg-white p-6 rounded-2xl border border-slate-100 hover:border-brand-red transition-all text-left shadow-sm hover:shadow-xl hover:shadow-red-50 flex flex-col h-full"
                       >
-                        <div className="w-14 h-14 rounded-2xl bg-brand-red/5 flex items-center justify-center text-brand-red group-hover:bg-brand-red group-hover:text-white transition-all">
-                          <cat.icon size={28} />
+                        <div className="w-12 h-12 rounded-xl bg-brand-red/5 flex items-center justify-center text-brand-red group-hover:bg-brand-red group-hover:text-white transition-all mb-5">
+                          <cat.icon size={24} />
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-slate-900 group-hover:text-brand-red transition-colors mb-2">{cat.name}</h3>
-                          <p className="text-slate-400 text-sm leading-relaxed">{cat.description}</p>
+                        <div className="flex-grow">
+                          <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-red transition-colors mb-2">{cat.name}</h3>
+                          <p className="text-slate-400 text-xs leading-relaxed">{cat.description}</p>
                         </div>
-                        <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ChevronRight size={24} className="text-brand-red" />
+                        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ChevronRight size={20} className="text-brand-red" />
                         </div>
                       </motion.button>
                     ))}
@@ -500,7 +488,16 @@ export default function App() {
                   </div>
                   <div>
                     <p className="technical-label mb-2">Режим работы</p>
-                    <p className="text-slate-900 font-bold text-lg">10:00 — 19:00 (Ежедневно)</p>
+                    <div className="space-y-2 mt-1">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2 max-w-[240px]">
+                        <span className="text-xs uppercase tracking-wider text-slate-400 font-medium">Пн — Сб</span>
+                        <span className="font-bold text-slate-900">10:00 — 19:00</span>
+                      </div>
+                      <div className="flex items-center justify-between max-w-[240px]">
+                        <span className="text-xs uppercase tracking-wider text-slate-400 font-medium">Воскресенье</span>
+                        <span className="font-bold text-slate-900">10:00 — 18:00</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="sm:col-span-2">
                     <p className="technical-label mb-2">Социальные сети</p>
@@ -563,18 +560,7 @@ export default function App() {
               <span className="font-bold tracking-tight uppercase text-sm">Строй ДОМ</span>
             </div>
             <div className="flex items-center gap-4">
-              <a 
-                href="https://vk.com/stroy_dom_mgn" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-[#0077FF] hover:translate-y-[-2px] transition-all shadow-sm overflow-hidden"
-                title="Мы ВКонтакте"
-              >
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0 4.8C0 2.14903 2.14903 0 4.8 0H19.2C21.851 0 24 2.14903 24 4.8V19.2C24 21.851 21.851 24 19.2 24H4.8C2.14903 24 0 21.851 0 19.2V4.8Z" fill="#0077FF"/>
-                  <path d="M12.639 17.514C7.886 17.514 5.176 14.258 5.062 8.847H7.452C7.531 12.81 9.278 14.488 10.662 14.832V8.847H12.925V12.261C14.31 12.112 15.772 10.575 16.264 8.847H18.528C18.154 11.005 16.558 12.542 15.415 13.202C16.558 13.734 18.39 15.054 19.168 17.514H16.666C16.065 15.642 14.577 14.2 12.925 14.032V17.514H12.639Z" fill="white"/>
-                </svg>
-              </a>
+              {/* VK icon removed */}
             </div>
           </div>
           <p className="text-slate-500 text-sm max-w-lg mx-auto leading-relaxed">
