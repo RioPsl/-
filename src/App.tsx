@@ -16,7 +16,9 @@ import { REVIEWS_DATA, CATEGORIES, SERVICES, CATALOG_DATA } from './data';
 export default function App() {
 
   const [visibleIndices, setVisibleIndices] = useState([0, 1, 2]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('fasteners');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+
+  const selectedCategory = CATEGORIES.find(c => c.id === selectedCategoryId);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -227,71 +229,159 @@ export default function App() {
           </div>
         </section>
 
-        {/* Categories & Catalog Grid */}
-        <section className="py-24 bg-slate-50" id="catalog">
+        {/* Categories & Catalog Section */}
+        <section className="py-24 bg-white" id="catalog">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="mb-16">
-              <span className="technical-label">Интерактивный каталог</span>
-              <h2 className="text-4xl font-bold text-slate-900 mt-4 tracking-tight">Популярные категории</h2>
-              <p className="text-slate-500 mt-2">Нажмите на интересующий раздел, чтобы увидеть примеры товаров и цены</p>
-            </div>
+            <AnimatePresence mode="wait">
+              {!selectedCategoryId ? (
+                <motion.div
+                  key="categories-grid"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="mb-16">
+                    <span className="technical-label">Ассортимент</span>
+                    <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mt-4 tracking-tight">Популярные категории</h2>
+                  </div>
 
-            <div className="grid lg:grid-cols-3 gap-12">
-              {/* Sidebar Categories */}
-              <div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-3">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
-                      selectedCategory === cat.id 
-                        ? 'bg-brand-red text-white border-brand-red shadow-lg shadow-red-200' 
-                        : 'bg-white text-slate-600 border-slate-200 hover:border-brand-red'
-                    }`}
-                  >
-                    <div className={`p-2 rounded-lg ${selectedCategory === cat.id ? 'bg-white/20' : 'bg-slate-100'}`}>
-                      <cat.icon size={20} />
-                    </div>
-                    <span className="font-bold text-sm leading-tight">{cat.name}</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Products Display */}
-              <div className="lg:col-span-2">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={selectedCategory}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="grid sm:grid-cols-2 gap-4"
-                  >
-                    {CATALOG_DATA[selectedCategory]?.map((prod, i) => (
-                      <div key={i} className="bg-white p-6 rounded-2xl border border-slate-200 flex justify-between items-center group hover:border-brand-red transition-all hover:shadow-md">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {CATEGORIES.map((cat, i) => (
+                      <motion.button
+                        key={cat.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                        onClick={() => setSelectedCategoryId(cat.id)}
+                        className="group relative bg-white p-8 rounded-[2rem] border border-slate-100 hover:border-brand-red transition-all text-left shadow-sm hover:shadow-xl hover:shadow-red-50 flex flex-col gap-6"
+                      >
+                        <div className="w-14 h-14 rounded-2xl bg-brand-red/5 flex items-center justify-center text-brand-red group-hover:bg-brand-red group-hover:text-white transition-all">
+                          <cat.icon size={28} />
+                        </div>
                         <div>
-                          <h4 className="font-bold text-slate-900 text-sm mb-1 leading-tight group-hover:text-brand-red transition-colors">{prod.name}</h4>
-                          <p className="text-[10px] technical-label !text-slate-400">Цена за {prod.sub}</p>
+                          <h3 className="text-xl font-bold text-slate-900 group-hover:text-brand-red transition-colors mb-2">{cat.name}</h3>
+                          <p className="text-slate-400 text-sm leading-relaxed">{cat.description}</p>
                         </div>
-                        <div className="text-right">
-                          <span className="text-lg font-bold text-brand-red">{prod.price}</span>
+                        <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ChevronRight size={24} className="text-brand-red" />
                         </div>
-                      </div>
+                      </motion.button>
                     ))}
-                    <div className="sm:col-span-2 mt-6 p-6 bg-slate-900 rounded-2xl text-white flex flex-col sm:flex-row justify-between items-center gap-4">
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="catalog-view"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-6">
+                    <div className="flex items-center gap-6">
+                      <button 
+                        onClick={() => setSelectedCategoryId(null)}
+                        className="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:text-brand-red hover:bg-red-50 transition-all"
+                      >
+                        <Hammer className="rotate-[-90deg]" size={24} />
+                      </button>
                       <div>
-                        <p className="font-bold">И это далеко не всё!</p>
-                        <p className="text-sm text-slate-400">Более 5000 товаров в магазине. Позвоните, чтобы уточнить наличие.</p>
+                        <div className="flex items-center gap-2 text-brand-red mb-1">
+                          {selectedCategory && <selectedCategory.icon size={18} />}
+                          <span className="technical-label uppercase text-[10px] tracking-widest">{selectedCategory?.description}</span>
+                        </div>
+                        <h2 className="text-4xl font-bold text-slate-900">{selectedCategory?.name}</h2>
                       </div>
-                      <a href="tel:89000987933" className="bg-brand-red px-6 py-3 rounded-xl hover:scale-105 transition-transform flex items-center gap-2 font-bold text-sm">
-                        <Phone size={18} />
-                        <span>Спросить наличие</span>
-                      </a>
+                    </div>
+
+                    {/* Mini switcher for other categories */}
+                    <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
+                      {CATEGORIES.filter(c => c.id !== selectedCategoryId).map(cat => (
+                        <button
+                          key={cat.id}
+                          onClick={() => setSelectedCategoryId(cat.id)}
+                          className="flex-shrink-0 px-4 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-500 hover:border-brand-red hover:text-brand-red transition-all whitespace-nowrap bg-white shadow-sm"
+                        >
+                          {cat.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Diagonal Staggered Product Grid */}
+                  <div className="relative py-12">
+                    <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-[1px] bg-slate-100" />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-12">
+                      {selectedCategoryId && CATALOG_DATA[selectedCategoryId]?.map((prod, i) => (
+                        <motion.div
+                          key={prod.name + i}
+                          initial={{ opacity: 0, x: -30, y: 20 }}
+                          animate={{ opacity: 1, x: 0, y: 0 }}
+                          transition={{ delay: i * 0.1, duration: 0.5 }}
+                          className={`bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-red-50 transition-all group relative overflow-hidden
+                            ${i % 2 === 0 ? 'lg:translate-y-0' : 'lg:translate-y-12'}
+                            ${i % 3 === 0 ? 'xl:translate-y-0' : i % 3 === 1 ? 'xl:translate-y-16' : 'xl:translate-y-32'}
+                          `}
+                        >
+                          <div className="absolute top-0 left-0 w-1 h-full bg-brand-red transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                          <div className="flex justify-between items-start mb-6">
+                            <span className="text-[10px] technical-label !text-slate-400 group-hover:text-brand-red transition-colors">Позиция #{i + 1}</span>
+                            <div className="p-2 rounded-lg bg-slate-50 text-slate-300 group-hover:text-brand-red/20 transition-colors">
+                              <CheckCircle2 size={16} />
+                            </div>
+                          </div>
+                          
+                          <h4 className="text-xl font-bold text-slate-900 mb-6 leading-tight group-hover:text-brand-red transition-colors min-h-[3rem]">
+                            {prod.name}
+                          </h4>
+                          
+                          <div className="flex items-end justify-between border-t border-slate-50 pt-6">
+                            <div>
+                              <p className="text-xs text-slate-400 mb-1">за {prod.sub}</p>
+                              <p className="text-2xl font-bold text-slate-900 tracking-tight group-hover:scale-105 transition-transform origin-left">{prod.price}</p>
+                            </div>
+                            <button className="p-3 bg-slate-50 rounded-2xl text-slate-400 group-hover:bg-brand-red group-hover:text-white transition-all">
+                              <Phone size={20} />
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 }}
+                    className="mt-32 max-w-4xl mx-auto p-12 rounded-[3rem] bg-slate-900 text-white relative overflow-hidden"
+                  >
+                    <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+                      <Hammer size={300} />
+                    </div>
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
+                      <div className="flex-1">
+                        <h3 className="text-3xl font-bold mb-4">Это малая часть ассортимента!</h3>
+                        <p className="text-slate-400 text-lg">
+                          В нашем магазине на Зеленом Логу представлено более 5000 позиций. 
+                          Крепеж на развес, сантехника, инструмент и многое другое – заходите, подберем всё необходимое.
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <a 
+                          href="tel:89000987933" 
+                          className="bg-brand-red px-10 py-5 rounded-2xl hover:shadow-2xl hover:shadow-red-500/20 transition-all flex items-center justify-center gap-3 font-bold text-xl"
+                        >
+                          <Phone size={24} />
+                          <span>Уточнить наличие</span>
+                        </a>
+                      </div>
                     </div>
                   </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
 
