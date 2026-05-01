@@ -16,6 +16,7 @@ import { REVIEWS_DATA, CATEGORIES, SERVICES, CATALOG_DATA } from './data';
 export default function App() {
 
   const [visibleIndices, setVisibleIndices] = useState([0, 1, 2]);
+  const [nextSlot, setNextSlot] = useState(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
   const selectedCategory = CATEGORIES.find(c => c.id === selectedCategoryId);
@@ -23,18 +24,21 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleIndices(prev => {
-        const slotToChange = Math.floor(Math.random() * prev.length);
         const newIndices = [...prev];
-        let nextIdx = Math.floor(Math.random() * REVIEWS_DATA.length);
-        while (newIndices.includes(nextIdx)) {
-          nextIdx = Math.floor(Math.random() * REVIEWS_DATA.length);
+        const availableIdx = REVIEWS_DATA
+          .map((_, i) => i)
+          .filter(i => !prev.includes(i));
+          
+        if (availableIdx.length > 0) {
+          const nextIdx = availableIdx[Math.floor(Math.random() * availableIdx.length)];
+          newIndices[nextSlot] = nextIdx;
+          setNextSlot(s => (s + 1) % 3);
         }
-        newIndices[slotToChange] = nextIdx;
         return newIndices;
       });
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlot]);
 
   return (
     <div className="min-h-screen bg-slate-50 overflow-x-hidden selection:bg-red-100 selection:text-red-900">
@@ -50,10 +54,10 @@ export default function App() {
             </span>
           </div>
           
-          <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <Clock size={16} className="text-brand-red" />
-              <span>Ежедневно: 09:00 — 20:00</span>
+              <span>Ежедневно: 10:00 — 19:00</span>
             </div>
             <a 
               href="https://vk.com/stroy_dom_mgn" 
@@ -396,7 +400,21 @@ export default function App() {
               </div>
               <div className="flex gap-1 h-fit">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={20} className="fill-brand-red text-brand-red" />
+                  <motion.div
+                    key={i}
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.6, 1, 0.6],
+                      filter: ["drop-shadow(0 0 0px #ef4444)", "drop-shadow(0 0 8px #ef4444)", "drop-shadow(0 0 0px #ef4444)"]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity, 
+                      delay: i * 0.2 
+                    }}
+                  >
+                    <Star key={i} size={20} className="fill-brand-red text-brand-red" />
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -416,13 +434,26 @@ export default function App() {
                       className="p-8 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col h-full"
                     >
                       <p className="text-slate-600 mb-6 italic flex-grow">"{review.text}"</p>
-                      <div className="flex items-center justify-between mt-auto">
-                        <div>
-                          <p className="font-bold text-slate-900">{review.name}</p>
-                          <p className="text-xs text-slate-400 font-mono">{review.date}</p>
+                      <div className="flex items-center justify-between mt-auto gap-4">
+                        <div className="flex flex-col">
+                          <div className="flex gap-0.5 mb-2">
+                            {Array.from({ length: 5 }).map((_, starI) => (
+                              <Star 
+                                key={starI} 
+                                size={12} 
+                                className={starI < review.rating ? "fill-yellow-400 text-yellow-400" : "text-slate-200"} 
+                              />
+                            ))}
+                          </div>
+                          <p className="font-bold text-slate-900 leading-none">{review.name}</p>
+                          <p className="text-[10px] text-slate-400 font-mono mt-1 opacity-60 uppercase tracking-wider">{review.date}</p>
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-brand-red border border-slate-200">
-                          <Star size={16} className="fill-brand-red" />
+                        <div className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-inner ${
+                          idx % 4 === 0 ? 'bg-blue-500' : 
+                          idx % 4 === 1 ? 'bg-emerald-500' : 
+                          idx % 4 === 2 ? 'bg-amber-500' : 'bg-indigo-500'
+                        }`}>
+                          {review.name.charAt(0)}
                         </div>
                       </div>
                     </motion.div>
@@ -465,6 +496,10 @@ export default function App() {
                     <a href="tel:89000987933" className="text-slate-900 font-bold text-lg hover:text-brand-red transition-colors">
                       8 (900) 098-79-33
                     </a>
+                  </div>
+                  <div>
+                    <p className="technical-label mb-2">Режим работы</p>
+                    <p className="text-slate-900 font-bold text-lg">10:00 — 19:00 (Ежедневно)</p>
                   </div>
                   <div className="sm:col-span-2">
                     <p className="technical-label mb-2">Социальные сети</p>
