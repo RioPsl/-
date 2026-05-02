@@ -77,9 +77,21 @@ export const CATEGORIES = [
 ];
 
 export const SERVICES = [
-  { title: 'Доставка по городу', desc: 'Привезем ваш заказ прямо к подъезду или на объект.', icon: Truck },
-  { title: 'Услуги мастеров', desc: 'Профессиональный монтаж и мелкосрочный ремонт.', icon: Wrench },
-  { title: 'Консультации', desc: 'Поможем подобрать нужный товар и рассчитать материалы.', icon: ShieldCheck }
+  { 
+    title: 'Доставка по городу', 
+    desc: 'Привезем ваш заказ прямо к подъезду или на объект. Быстро и надежно.', 
+    icon: Truck
+  },
+  { 
+    title: 'Услуги мастеров', 
+    desc: 'Профессиональный монтаж и мелкосрочный ремонт любой сложности.', 
+    icon: Wrench
+  },
+  { 
+    title: 'Консультации', 
+    desc: 'Поможем подобрать нужный товар и рассчитать материалы под ваш бюджет.', 
+    icon: ShieldCheck
+  }
 ];
 
 export const CATALOG_DATA: Record<string, { name: string; price: string; sub: string }[]> = {

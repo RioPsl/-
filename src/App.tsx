@@ -138,7 +138,6 @@ export default function App() {
             </motion.div>
           </div>
 
-          {/* Floating Accents */}
           <div className="absolute right-[-50px] lg:right-10 top-1/2 -translate-y-1/2 hidden lg:block opacity-[0.15] pointer-events-none">
             <Hammer size={500} strokeWidth={0.5} className="rotate-[5deg] text-slate-400" />
           </div>
@@ -265,11 +264,11 @@ export default function App() {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="catalog-view"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
+                  key={`catalog-${selectedCategoryId}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-6">
                     <div className="flex items-center gap-6">
