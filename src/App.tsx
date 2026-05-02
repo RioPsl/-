@@ -11,7 +11,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { REVIEWS_DATA, CATEGORIES, SERVICES, CATALOG_DATA } from './data';
 
 export default function App() {
@@ -19,8 +19,31 @@ export default function App() {
   const [visibleIndices, setVisibleIndices] = useState([0, 1, 2]);
   const [nextSlot, setNextSlot] = useState(0);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const catalogRef = useRef<HTMLElement>(null);
+  const isFirstRender = useRef(true);
+
+  const handleCategorySelect = (id: string | null) => {
+    setSelectedCategoryId(id);
+  };
 
   const selectedCategory = CATEGORIES.find(c => c.id === selectedCategoryId);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
+    const offset = 80; // Offset for sticky header
+    const element = catalogRef.current;
+    if (element) {
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: elementPosition - offset,
+        behavior: 'smooth'
+      });
+    }
+  }, [selectedCategoryId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -105,7 +128,7 @@ export default function App() {
               </div>
               
               <h1 className="text-5xl lg:text-7xl font-bold text-slate-900 leading-[1.1] mb-8 tracking-tighter">
-                Магазин строительных товаров <span className="text-brand-red italic">у дома</span>.
+                Магазин строительных товаров <span className="text-brand-red italic whitespace-nowrap">у дома</span>.
               </h1>
               
               <p className="text-lg lg:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl">
@@ -222,7 +245,7 @@ export default function App() {
         </section>
 
         {/* Categories & Catalog Section */}
-        <section className="py-24 bg-white" id="catalog">
+        <section className="py-24 bg-white" id="catalog" ref={catalogRef}>
           <div className="max-w-7xl mx-auto px-4">
             <AnimatePresence mode="wait">
               {!selectedCategoryId ? (
@@ -245,7 +268,7 @@ export default function App() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        onClick={() => setSelectedCategoryId(cat.id)}
+                        onClick={() => handleCategorySelect(cat.id)}
                         className="group relative bg-white p-6 rounded-2xl border border-slate-100 hover:border-brand-red transition-all text-left shadow-sm hover:shadow-xl hover:shadow-red-50 flex flex-col h-full"
                       >
                         <div className="w-12 h-12 rounded-xl bg-brand-red/5 flex items-center justify-center text-brand-red group-hover:bg-brand-red group-hover:text-white transition-all mb-5">
@@ -273,7 +296,7 @@ export default function App() {
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-6">
                     <div className="flex items-center gap-6">
                       <button 
-                        onClick={() => setSelectedCategoryId(null)}
+                        onClick={() => handleCategorySelect(null)}
                         className="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:text-brand-red hover:bg-red-50 transition-all"
                       >
                         <Hammer className="rotate-[-90deg]" size={24} />
@@ -292,7 +315,7 @@ export default function App() {
                       {CATEGORIES.filter(c => c.id !== selectedCategoryId).map(cat => (
                         <button
                           key={cat.id}
-                          onClick={() => setSelectedCategoryId(cat.id)}
+                          onClick={() => handleCategorySelect(cat.id)}
                           className="flex-shrink-0 px-4 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-500 hover:border-brand-red hover:text-brand-red transition-all whitespace-nowrap bg-white shadow-sm"
                         >
                           {cat.name}
